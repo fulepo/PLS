@@ -15,11 +15,20 @@ end
 [X_rows, X_cols] = size(X);
 [Y_rows, Y_cols] = size(Y);
 
+if X_rows ~= Y_rows
+    disp('ERROR! Matrix dimensions must agree')
+    return
+end
+
 run('pls_conditions.m');
 run('pls_prepro.m');
 
-RESULTS = pls_decomp(X, Y, X_rows, X_cols, ...
+if prepro == 1
+    RESULTS.X_Centered = 
+
+RESULTS = pls_regress(X, Y, X_rows, X_cols, ...
         Y_rows, Y_cols, NumFact, NumIter, Tol)
+    
     
     
 

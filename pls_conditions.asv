@@ -6,16 +6,16 @@ elseif nargin == 2
     prepro = 0;
     NumFact = min(X_rows,X_cols);
     NumIter = 20000;
-    Tol = 1e-6;
+    Tol = 1e-5;
 elseif nargin == 3
     NumFact = min(X_rows, X_cols);
     NumIter = 20000;
-    Tol = 1e-6;
+    Tol = 1e-5;
 elseif nargin == 4;
-    NumIter = 20000;
-    Tol = 1e-6;
+    NumIter = 0000;
+    Tol = 1e-5;
 elseif nargin == 5;
-    Tol = 1e-6;
+    Tol = 1e-5;
 end
     
     
