@@ -18,9 +18,8 @@ end
 run('pls_conditions.m');
 run('pls_prepro.m');
 
-RESULTS = pls_regress(X, Y, X_rows, X_cols, ...
+RESULTS = pls_decomp(X, Y, X_rows, X_cols, ...
         Y_rows, Y_cols, NumFact, NumIter, Tol)
-    
     
     
 
