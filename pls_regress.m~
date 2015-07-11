@@ -23,7 +23,7 @@ RESULTS.Y_EigenVar = RESULTS.Y_Eigenvalues./sum(...
 RESULTS.X_Scores = zeros(X_rows, NumFact);
 RESULTS.Y_Scores = zeros(Y_rows, NumFact);
 RESULTS.X_Loadings = zeros(NumFact, X_cols);
-RESULTS.Y_Loadings = zeros(NumFact, Y_cols); 
+RESULTS.Y_Loadings = zeros(Ycols, Y_cols);
 RESULTS.PLS_Weights = zeros(NumFact, X_cols);
 RESULTS.PLS_RegressCoeff = zeros(X_cols, Y_cols);
 
@@ -58,18 +58,16 @@ for fact=1:NumFact
     
     RESULTS.X_Scores(:,fact) = t_h;
     RESULTS.Y_Scores(:,fact) = u_h;
-    RESULTS.X_Loadings(fact,:) = p_h';
-    RESULTS.Y_Loadings(fact,:) = q_h';  
+    RESULTS.X_Loadings(fact,:) = p_h;
+    RESULTS.Y_Loadings(fact,:) = q_h;
     RESULTS.PLS_Weights(fact,:) = w_h;
- 
         
 end
 
 RESULTS.PLS_RegressCoeff = RESULTS.PLS_Weights*inv(...
     RESULTS.X_Loadings'*RESULTS.PLS_Weights)*...
     RESULTS.Y_Loadings;
-    RESULTS.X_Loadings = RESULTS.X_Loadings';
-    RESULTS.Y_Loadings = RESULTS.Y_Loadings';
+
 
 
 

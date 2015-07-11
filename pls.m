@@ -26,6 +26,7 @@ run('pls_prepro.m');
 RESULTS = pls_regress(X, Y, X_rows, X_cols, ...
         Y_rows, Y_cols, NumFact, NumIter, Tol, prepro)
     
+run('pls_figures')
     
     
 
