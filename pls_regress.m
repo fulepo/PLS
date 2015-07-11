@@ -65,12 +65,13 @@ for fact=1:NumFact
         
 end
 
-RESULTS.PLS_RegressCoeff = RESULTS.PLS_Weights*inv(...
-    RESULTS.X_Loadings'*RESULTS.PLS_Weights)*...
+
+RESULTS.PLS_RegressCoeff = transpose(RESULTS.PLS_Weights*inv(...
+    RESULTS.X_Loadings'*RESULTS.PLS_Weights))*...
     RESULTS.Y_Loadings;
+
     RESULTS.X_Loadings = RESULTS.X_Loadings';
     RESULTS.Y_Loadings = RESULTS.Y_Loadings';
-
 
 
     
