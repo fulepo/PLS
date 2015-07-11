@@ -28,7 +28,7 @@ RESULTS.PLS_Weights = zeros(NumFact, X_cols);
 RESULTS.PLS_RegressCoeff = zeros(X_cols, Y_cols);
 
 Iter = 0;
-NumFact
+
 % Decomposition 
 for fact=1:NumFact
     u_h = normc(Y(:,1));
@@ -37,11 +37,11 @@ for fact=1:NumFact
     while(~ende);
         Iter = Iter+1;
         u_h_old = u_h;
-        w_h = normc(X'*u_h/(u_h'*u_h));
+        w_h = (X'*u_h/(u_h'*u_h));
         w_h = normc(w_h);
-        t_h = normc(X*w_h);
+        t_h = (X*w_h);
         q_h = normc(Y'*t_h/(t_h'*t_h));
-        u_h = normc(Y*q_h/(q_h'*q_h));  
+        u_h = (Y*q_h/(q_h'*q_h));  
         prec = (u_h-u_h_old)'*(u_h-u_h_old);
   
         if prec <= Tol^2;
