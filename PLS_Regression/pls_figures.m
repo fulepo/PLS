@@ -1,4 +1,12 @@
 
+function pls_figures(RESULTS, PLS_NumComp,X_TABLE, Y_TABLE)
+
+if PLS_NumComp == 1
+    disp('Cannot build plots with only one PLS component');
+    return
+end
+    
+
 figure
 plot((RESULTS.X_Loadings(:,1)), ...
     (RESULTS.X_Loadings(:,2)), 'o',...
