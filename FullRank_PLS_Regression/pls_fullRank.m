@@ -41,8 +41,8 @@ if X_rows ~= Y_rows
     return
 end
 
-run('pls_conditions.m');
-run('pls_prepro.m');
+run('pls_FRconditions.m');
+run('pls_FRprepro.m');
 
 RESULTS = pls_FRregress(X, Y, X_rows, X_cols, ...
         Y_rows, Y_cols, NumFact, NumIter, Tol, prepro);
