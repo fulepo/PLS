@@ -1,7 +1,7 @@
 
 % selection of the X-vector with the largest variance
 
-[a,b] = max(std(X));
+[a,b] = max(std(table2array(X)));
 LargeX = b;      
 
 if prepro == 1

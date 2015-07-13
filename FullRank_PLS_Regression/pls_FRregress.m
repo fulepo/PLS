@@ -1,5 +1,5 @@
 function RESULTS = pls_FRregress(X, Y, X_rows, X_cols, ...
-        Y_rows, Y_cols, NumFact, NumIter, Tol, prepro)
+        Y_rows, Y_cols, NumFact, NumIter, Tol, prepro, LargeX)
 
 if prepro == 1
     RESULTS.X_Centered = X;
@@ -31,7 +31,7 @@ Iter = 0;
 
 % Decomposition 
 for fact=1:NumFact
-    u_h = normc(Y(:,1));
+    u_h = normc(X(:,LargeX));
     ende = false;
     
     while(~ende);

@@ -46,7 +46,7 @@ run('pls_FRconditions.m');
 run('pls_FRprepro.m');
 
 RESULTS = pls_FRregress(X, Y, X_rows, X_cols, ...
-        Y_rows, Y_cols, NumFact, NumIter, Tol, prepro);
+        Y_rows, Y_cols, NumFact, NumIter, Tol, prepro, LargeX);
 
     
 RESULTS.PLS_RegressCoeff = (RESULTS.PLS_Weights*pinv(...
