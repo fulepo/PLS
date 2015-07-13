@@ -76,7 +76,7 @@ end
 
 while (~finish);  
     
-    CrossValNum = round(0.10*size(X,1));
+    CrossValNum = round(0.20*size(X,1));
     CrossValIndex = randperm(size(X,1),CrossValNum)';
     RowIndex(CrossValIndex,1) = 0;
     

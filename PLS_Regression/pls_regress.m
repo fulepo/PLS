@@ -40,7 +40,7 @@ RESULTS.PLS_RegressCoeff = zeros(size(X_Train,1), size(Y_Train,2));
 % Decomposition 
 for fact=1:PLS_Comp
     %u_h = normc(Y_Train(:,1));
-    u_h = -normc(X_Train(:,LargeX));
+    u_h = normc(X_Train(:,LargeX));
     ende = false;
 %     
     while(~ende);
