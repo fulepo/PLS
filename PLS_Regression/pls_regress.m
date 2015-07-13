@@ -1,7 +1,7 @@
 
 function RESULTS = pls_regress(X, Y, ...
                        X_Train, Y_Train,...
-                       PLS_Comp, NumIter, Tol, prepro, NumFact)
+                       PLS_Comp, NumIter, Tol, prepro, NumFact, LargeX)
 
 X_Train_Original = X_Train;
 Y_Train_Original = Y_Train;
@@ -39,7 +39,8 @@ RESULTS.PLS_RegressCoeff = zeros(size(X_Train,1), size(Y_Train,2));
  
 % Decomposition 
 for fact=1:PLS_Comp
-    u_h = normc(Y_Train(:,1));
+    %u_h = normc(Y_Train(:,1));
+    u_h = -normc(X_Train(:,LargeX));
     ende = false;
 %     
     while(~ende);

@@ -1,8 +1,11 @@
 
-function pls_figures(RESULTS, PLS_NumComp,X_TABLE, Y_TABLE)
+function pls_figures(RESULTS, PLS_NumComp,X_TABLE, Y_TABLE,...
+    Table_permuted_index)
 
 if PLS_NumComp == 1
-    disp('Cannot build plots with only one PLS component');
+    %disp('Cannot build plots with only one PLS component');
+    pls_figures_OnePLS(RESULTS, X_TABLE, Y_TABLE, ...
+        Table_permuted_index);
     return
 end
     

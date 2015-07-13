@@ -46,6 +46,8 @@ if ExistTable_A == 1 && ExistTable_B ==1
     
         X_TABLE = X(Table_permuted_Index,:);
         Y_TABLE = Y(Table_permuted_Index,:);
+        X = X(Table_permuted_Index,:);
+        Y = Y(Table_permuted_Index,:);
 else
     disp('ERROR! The data are not in TABLE form');
     RESULTS = [];
@@ -163,7 +165,8 @@ RESULTS_PLS.PLS_Model.OUTCOME = table(iteration, Min_RMSEP, PLS_NumComp, ...
         'RowNames', {'PARAMETERS'}, ...
         'VariableNames', {'NumIter', 'Min_RMSEP', 'PLS_CompNum'});
 
- pls_figures(RESULTS_PLS.PLS_Model, PLS_NumComp,X_TABLE, Y_TABLE);
+ pls_figures(RESULTS_PLS.PLS_Model, PLS_NumComp,X_TABLE, Y_TABLE,...
+     Table_permuted_Index);
  
   RESULTS_PLS.PLS_Model.OUTCOME  
 

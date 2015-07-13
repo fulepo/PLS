@@ -55,7 +55,7 @@ else
 end
     % PREPROCESSING WHOLE TABLES
         
-    [X, Y] = pls_prepro(X, Y, prepro, X_TABLE, Y_TABLE);                    
+    [X, Y, LargeX] = pls_prepro(X, Y, prepro, X_TABLE, Y_TABLE);                    
     
     X_TABLE_Train_old = X;
     Y_TABLE_Train_old = Y;
@@ -119,7 +119,7 @@ while (~finish);
  for PLS_Comp = 1:NumFact 
  RESULTS_PLS.PLS_CrossVal = pls_regress(X, Y, ...
                        X_Train, Y_Train,...
-                       PLS_Comp, NumIter, Tol, prepro, NumFact);
+                       PLS_Comp, NumIter, Tol, prepro, NumFact, LargeX);
     
     Y_CrossVal_Hat = X_CrossVal*RESULTS_PLS.PLS_CrossVal.PLS_RegressCoeff;
     ressq = (Y_CrossVal-Y_CrossVal_Hat).^2;
@@ -159,13 +159,14 @@ Y_Train = Y;
 
 RESULTS_PLS.PLS_Model = pls_regress(X, Y, ...
                        X_Train, Y_Train,...
-                       PLS_NumComp, NumIter, Tol, prepro, NumFact);
+                       PLS_NumComp, NumIter, Tol, prepro, NumFact, LargeX);
     
 RESULTS_PLS.PLS_Model.OUTCOME = table(iteration, Min_RMSEP, PLS_NumComp, ...
         'RowNames', {'PARAMETERS'}, ...
         'VariableNames', {'NumIter', 'Min_RMSEP', 'PLS_CompNum'});
 
- pls_figures(RESULTS_PLS.PLS_Model, PLS_NumComp,X_TABLE, Y_TABLE);
+ pls_figures(RESULTS_PLS.PLS_Model, PLS_NumComp,X_TABLE, Y_TABLE,...
+     Table_permuted_Index);
  
   RESULTS_PLS.PLS_Model.OUTCOME  
 

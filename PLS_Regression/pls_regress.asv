@@ -35,11 +35,18 @@ RESULTS.Y_Loadings = zeros(NumFact, size(Y_Train,2));
 RESULTS.PLS_Weights = zeros(NumFact, size(X_Train,2));
 RESULTS.PLS_RegressCoeff = zeros(size(X_Train,1), size(Y_Train,2));
  
+% selection of the X-vector with the largest variance
+
+[a,b] = max(std())
+LargX = X_Train(:,)
+
+
  Iter = 0;
  
 % Decomposition 
 for fact=1:PLS_Comp
-    u_h = normc(Y_Train(:,1));
+    %u_h = normc(Y_Train(:,1));
+    u_h = -normc(rand(size(Y_Train,1),1));
     ende = false;
 %     
     while(~ende);
@@ -81,7 +88,7 @@ RESULTS.PLS_RegressCoeff = (RESULTS.PLS_Weights*pinv(...
      RESULTS.Y_Loadings = RESULTS.Y_Loadings';
      RESULTS.X_ResidualMatrix = X_Train;
      RESULTS.Y_ResidualMatrix = Y_Train;
-     RESULTS.Y_PREDICTED = 
+     RESULTS.Y_PREDICTED = X*RESULTS.PLS_RegressCoeff;
 
 
     

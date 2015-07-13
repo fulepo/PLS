@@ -3,8 +3,10 @@ function [X_prepro, Y_prepro, LargeX] = pls_prepro(X, Y, prepro,...
 
 % selection of the X-vector with the largest variance
 
-[a,b] = max(std(table2array(X)));
-LargeX = b;                                        
+[a,b] = max(std(X));
+LargeX = X(:,b);
+                             
+                                        
         if prepro == 0
             X_prepro = X;
             Y_prepro = Y;
