@@ -46,6 +46,8 @@ if ExistTable_A == 1 && ExistTable_B ==1
     
         X_TABLE = X(Table_permuted_Index,:);
         Y_TABLE = Y(Table_permuted_Index,:);
+        X = X(Table_permuted_Index,:);
+        Y = Y(Table_permuted_Index,:);
 else
     disp('ERROR! The data are not in TABLE form');
     RESULTS = [];
