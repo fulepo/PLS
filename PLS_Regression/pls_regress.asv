@@ -81,7 +81,7 @@ RESULTS.PLS_RegressCoeff = (RESULTS.PLS_Weights*pinv(...
      RESULTS.Y_Loadings = RESULTS.Y_Loadings';
      RESULTS.X_ResidualMatrix = X_Train;
      RESULTS.Y_ResidualMatrix = Y_Train;
-     RESULTS.Y_PREDICTED = X*RESULTS.PLS_RegressCoeff;
+     RESULTS.Y_PREDICTED = 
 
 
     
