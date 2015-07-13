@@ -165,7 +165,7 @@ RESULTS_PLS.PLS_Model.OUTCOME = table(iteration, Min_RMSEP, PLS_NumComp, ...
 
  pls_figures(RESULTS_PLS.PLS_Model, PLS_NumComp,X_TABLE, Y_TABLE);
  
-    
+  RESULTS_PLS.PLS_Model.OUTCOME  
 
 
 
