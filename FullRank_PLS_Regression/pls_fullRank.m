@@ -22,6 +22,7 @@ function RESULTS = pls_fullRank(X, Y, prepro, NumFact, NumIter, Tol)
 % pls.m available at: https.//github.com/fulepo/PLS/PLS_Regression
 %                 
 
+set(0,'DefaultFigureWindowStyle','docked');
 
 ExistTable_A = istable(X);
 ExistTable_B = istable(Y);

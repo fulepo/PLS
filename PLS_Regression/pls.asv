@@ -28,7 +28,6 @@ function RESULTS_PLS = pls(X, Y, prepro, NumFact, NumIter, Tol)
 % model.
 %%
 
-set(0,'DefaultFigureWindowStyle','docked');
 
 run('pls_conditions.m');
 
