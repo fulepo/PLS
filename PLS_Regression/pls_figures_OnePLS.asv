@@ -61,7 +61,14 @@ text(NumVarY,...
     Y_TABLE.Properties.VariableNames,...
     'HorizontalAlignment','left')
 title('BIPLOT of PLS-1');
-xlabel('PLS-1');
-ylabel('PLS-2');
+xlabel('ObjNum');
+ylabel('PLS-1');
+
+figure
+plot(RESULTS.Y, RESULTS.Y_PREDICTED, 'bo',...
+    'Marker);
+title('PLS model results - Scaled');
+xlabel('Original Y');
+ylabel('PLS-predicted Y');
 
 

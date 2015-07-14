@@ -40,6 +40,9 @@ run('pls_conditions.m');
 if size(X,1) ~= size(Y,1)
     disp('ERROR! Matrix dimensions must agree')
     return
+elseif NumFact == 0;
+    disp('ERROR! The no. of PLS components cannot be zero')
+    NumFact = input('Number of PLS components: ')
 end
 
 ExistTable_A = istable(X);

@@ -6,16 +6,18 @@ function RESULTS = pls_regress(X, Y, ...
 X_Train_Original = X_Train;
 Y_Train_Original = Y_Train;
     
-if prepro == 0
-    RESULTS.X_Raw = X;
-    RESULTS.Y_Raw = Y;
-elseif prepro == 1
-    RESULTS.X_Centered = X;
-    RESULTS.Y_Centered = Y;
-elseif prepro == 2
-    RESULTS.X_Autoscaled = X;
-    RESULTS.Y_Autoscaled = Y;
-end
+RESULTS.X = X;
+RESULTS.Y = Y;
+% if prepro == 0
+%     RESULTS.X_Raw = X;
+%     RESULTS.Y_Raw = Y;
+% elseif prepro == 1
+%     RESULTS.X_Centered = X;
+%     RESULTS.Y_Centered = Y;
+% elseif prepro == 2
+%     RESULTS.X_Autoscaled = X;
+%     RESULTS.Y_Autoscaled = Y;
+% % end
  
 % Eigenvalues of WHOLE X matrix
 

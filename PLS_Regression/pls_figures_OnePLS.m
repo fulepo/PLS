@@ -64,4 +64,29 @@ title('BIPLOT of PLS-1');
 xlabel('ObjNum');
 ylabel('PLS-1');
 
+figure
+plot(RESULTS.Y, RESULTS.Y_PREDICTED, 'bo',...
+    'MarkerFaceColor', 'blue');
+title('PLS model results - Scaled');
+xlabel('Original Y');
+ylabel('PLS-predicted Y');
+
+
+
+figure
+plot(Table_permuted_index, RESULTS.X_ResidualMatrix, '*');
+title('X RESIDUALS');
+xlabel('RowNum');
+ylabel('Y Residuals');
+
+figure
+plot(Table_permuted_index, RESULTS.Y_ResidualMatrix, '*');
+title('Y RESIDUALS');
+xlabel('RowNum');
+ylabel('Y Residuals');
+
+figure
+normplot(RESULTS.Y_ResidualMatrix)
+title('Normal probability plot of Y residuals')
+
 

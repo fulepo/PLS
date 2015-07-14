@@ -40,6 +40,9 @@ run('pls_conditions.m');
 if size(X,1) ~= size(Y,1)
     disp('ERROR! Matrix dimensions must agree')
     return
+elseif NumFact == 0;
+    disp('ERROR! The no. of PLS components cannot be zero')
+    
 end
 
 ExistTable_A = istable(X);
@@ -53,7 +56,7 @@ if ExistTable_A == 1 && ExistTable_B ==1
         Y_TABLE = Y(Table_permuted_Index,:);
         X = X(Table_permuted_Index,:);
         Y = Y(Table_permuted_Index,:);
-elseif ExistTable_A == 0 && ExistTable_B ==1
+elseif ExistTable_A == 0 && ExistTable_B == 0
     [X, Y] = pls_Convert2Table(X,Y);
     Table_permuted_Index = randperm(size(X,1))';
     
@@ -158,20 +161,6 @@ iteration = iteration-1;
 
 CV_ERROR_tot = CV_ERROR_tot./iteration;
 RESULTS_PLS.PLS_CrossVal.CV_ERROR_tot = CV_ERROR_tot;
-%[Min_RMSEP, PLS_NumComp] = min(CV_ERROR_tot(:,2));
-
-% PLS_NumComp = 0;
-% for i=1:size(CV_ERROR_tot,1)-1
-%    if (CV_ERROR_tot(i+1,2)>CV_ERROR_tot(i,2))
-%        i = i-1;
-%        Min_RMSEP = CV_ERROR_tot(i,2);
-%        PLS_NumComp = CV_ERROR_tot(i,1);
-%        i=i+1;
-%    elseif (CV_ERROR_tot(i+1,2)<CV_ERROR_tot(i,2))
-%        Min_RMSEP = CV_ERROR_tot(i+1,2);
-%        PLS_NumComp = CV_ERROR_tot(i+1,1);
-%   end
-% end
 
     [Min_RMSEP, PLS_NumComp] = min(CV_ERROR_tot(:,2));
 

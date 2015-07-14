@@ -9,7 +9,7 @@ if PLS_NumComp == 1
     return
 end
     
-if PLS_NumComp >2
+if size(Y_TABLE >2
 figure
 plot(scaledata(RESULTS.X_Loadings(:,1),-1,1), ...
     scaledata(RESULTS.X_Loadings(:,2),-1,1), 'o',...
@@ -111,12 +111,12 @@ xlabel('PLS-1');
 ylabel('PLS-2');
 
 figure
-plot(scaledata(RESULTS.X_Scores(:,1),-1,1), ...
-    scaledata(RESULTS.X_Scores(:,2),-1,1), 'o',...
+plot((RESULTS.X_Scores(:,1)), ...
+    (RESULTS.X_Scores(:,2)), 'o',...
     'MarkerFaceColor', 'blue',...
     'MarkerEdgeColor', 'blue')
-text(scaledata(RESULTS.X_Scores(:,1),-1,1)+0.02,...
-    scaledata(RESULTS.X_Scores(:,2),-1,1)+0.02, ...
+text((RESULTS.X_Scores(:,1))+0.02,...
+    (RESULTS.X_Scores(:,2))+0.02, ...
     X_TABLE.Properties.RowNames,...
     'HorizontalAlignment','left')
 hold on
@@ -199,4 +199,39 @@ title('BIPLOT of PLS-1 and PLS-2');
 xlabel('PLS-1');
 ylabel('PLS-2');
 
+
+
+
 end
+
+figure
+plot(RESULTS.Y, RESULTS.Y_PREDICTED, 'o');
+hold on
+title('PLS model results - Scaled');
+xlabel('Original Y');
+ylabel('PLS-predicted Y');
+
+
+figure
+plot(Table_permuted_index, RESULTS.X_ResidualMatrix, '*');
+title('X RESIDUALS');
+xlabel('RowNum');
+ylabel('Y Residuals');
+
+figure
+plot(Table_permuted_index, RESULTS.Y_ResidualMatrix, '*');
+title('Y RESIDUALS');
+xlabel('RowNum');
+ylabel('Y Residuals');
+
+figure
+normplot(RESULTS.Y_ResidualMatrix)
+title('Normal probability plot of Y residuals')
+
+
+
+
+
+
+
+
