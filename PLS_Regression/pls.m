@@ -124,12 +124,12 @@ iteration
 %%
 %   SIZE OF DATA MATRICES
 
-[X_rows, X_cols] = size(X);
-[Y_rows, Y_cols] = size(Y);
-[X_Train_rows, X_Train_cols] = size(X_Train);
-[Y_Train_rows, Y_Train_cols] = size(Y_Train);
-[X_CrossVal_rows, X_CrossVal_cols] = size(X_CrossVal);
-[Y_CrossVal_rows, Y_CrossVal_cols] = size(Y_CrossVal);
+[~, ~] = size(X);
+[~, ~] = size(Y);
+[~, ~] = size(X_Train);
+[~, ~] = size(Y_Train);
+[~, ~] = size(X_CrossVal);
+[Y_CrossVal_rows, ~] = size(Y_CrossVal);
 
 %%
 %   EXECUTION for the determination of PLS components

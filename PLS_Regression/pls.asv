@@ -42,7 +42,7 @@ if size(X,1) ~= size(Y,1)
     return
 elseif NumFact == 0;
     disp('ERROR! The no. of PLS components cannot be zero')
-    
+    NumFact = input('Number of PLS components: ')
 end
 
 ExistTable_A = istable(X);
@@ -188,6 +188,7 @@ RESULTS_PLS.PLS_Model.OUTCOME = table(iteration, Min_RMSEP, PLS_NumComp, ...
         'RowNames', {'PARAMETERS'}, ...
         'VariableNames', {'NumIter', 'Min_RMSEP', 'PLS_CompNum'});
 
+    RESULTS_PLS.PLS_Model.X_ErrorImproved = X-RESULTS_PLS.PLS_Model.X;
     RESULTS_PLS.PLS_Model.OUTCOME
 
  pls_figures(RESULTS_PLS.PLS_Model, PLS_NumComp,X_TABLE, Y_TABLE,...
