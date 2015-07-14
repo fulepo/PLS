@@ -9,7 +9,10 @@ function RESULTS_PLS = pls(X, Y, prepro, NumFact, NumIter, Tol)
 % Y = output data matrix
 % prepro = type of matrix preprocessing (0,1 and 2 are: no prepro,
 %                 column-centering and autoscaling, respectively)
-% NumFact = number of factors to extract. Give the min(X_rows, X_cols)
+% NumFact = number of factors to extract. Use this parameter to help
+%             the function in finding the optimal minimum for the 
+%             Cross-Validation and therefore, the optimal number of 
+%             PLS components necessary to build the model.
 % NumIter = maximum number of iterations for the PLS convergence
 % Tol = tolerance (given as 1e-n) for PLS convergence
 % 
@@ -50,15 +53,28 @@ if ExistTable_A == 1 && ExistTable_B ==1
         Y_TABLE = Y(Table_permuted_Index,:);
         X = X(Table_permuted_Index,:);
         Y = Y(Table_permuted_Index,:);
+elseif ExistTable_A == 0 && ExistTable_B == 0
+    [X, Y] = pls_Convert2Table(X,Y);
+    Table_permuted_Index = randperm(size(X,1))';
+    
+        X_TABLE = X(Table_permuted_Index,:);
+        Y_TABLE = Y(Table_permuted_Index,:);
+        X = X(Table_permuted_Index,:);
+        Y = Y(Table_permuted_Index,:);
 else
-    disp('ERROR! The data are not in TABLE form');
-    RESULTS = [];
-    return
+    disp('Submit both X and Y as either MATRICES or TABLE variables');
 end
-    % PREPROCESSING WHOLE TABLES
+
+RESULTS_PLS.X_TABLE_Perm = X_TABLE;
+RESULTS_PLS.Y_TABLE_Perm = Y_TABLE;
+
+% PREPROCESSING WHOLE TABLES
         
     [X, Y] = pls_prepro(X, Y, prepro, X_TABLE, Y_TABLE);
-        
+
+    RESULTS_PLS.X_TABLE_PermPrepro = X;
+    RESULTS_PLS.Y_TABLE_PermPrepro = Y;
+    
     X_TABLE_Train_old = X;
     Y_TABLE_Train_old = Y;
     X_TABLE_CrossVal_old = X;
@@ -77,7 +93,8 @@ end
     
 CrossValIndex = 1;
 while (~finish);  
-
+clc;
+iteration
     RowIndex(CrossValIndex,1) = 0;
     
     X_TABLE_Train = X_TABLE_Train_old;
@@ -141,7 +158,8 @@ iteration = iteration-1;
 
 CV_ERROR_tot = CV_ERROR_tot./iteration;
 RESULTS_PLS.PLS_CrossVal.CV_ERROR_tot = CV_ERROR_tot;
-[Min_RMSEP, PLS_NumComp] = min(CV_ERROR_tot(:,2));
+
+    [Min_RMSEP, PLS_NumComp] = min(CV_ERROR_tot(:,2));
 
  figure
  plot(CV_ERROR_tot(:,1), (CV_ERROR_tot(:,2)), 'o-', ...
@@ -166,12 +184,12 @@ RESULTS_PLS.PLS_Model = pls_regress(X, Y, ...
 RESULTS_PLS.PLS_Model.OUTCOME = table(iteration, Min_RMSEP, PLS_NumComp, ...
         'RowNames', {'PARAMETERS'}, ...
         'VariableNames', {'NumIter', 'Min_RMSEP', 'PLS_CompNum'});
-RESULTS_PLS.PLS_Model.OUTCOME
+
+    RESULTS_PLS.PLS_Model.OUTCOME
 
  pls_figures(RESULTS_PLS.PLS_Model, PLS_NumComp,X_TABLE, Y_TABLE,...
      Table_permuted_Index);
  
-
 
 
 

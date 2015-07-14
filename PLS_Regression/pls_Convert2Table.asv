@@ -1,0 +1,30 @@
+
+function [Xtable, Ytable] = pls_Convert2Table(X, Y)
+
+[X_rows, X_cols] = size(X);
+[Y_rows, Y_cols] = size(Y);
+
+RowIndex = 1:1:X_rows
+RowIndex=RowIndex'
+RowLabel = 'R.';
+
+for i=1:size(RowIndex,1)
+    b = num2str(RowIndex(i))
+    b = strcat(RowLabel,b);
+    c = cellstr(b);
+    RowNames(i) = c;
+end
+
+Xtable = array2table(X, 'RowNames', RowNames);
+Ytable = array2table(Y, 'RowNames', RowNames);
+
+ColIndex = 1:1:X_cols
+ColIndex=ColIndex'
+ColLabel = 'Var.';
+
+for i=1:size(ColIndex,1)
+    b = num2str(ColIndex(i))
+    b = strcat(ColLabel,b);
+    c = cellstr(b);
+    ColNames(i) = c;
+end

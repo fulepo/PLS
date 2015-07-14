@@ -14,6 +14,12 @@ elseif nargin == 3
     NumIter = 20000;
     Tol = 1e-5;
 elseif nargin == 4;
+    while NumFact > min(size(X,1),size(X,2))-1;
+        disp('ERROR! Too many components. Max mumber is:');
+        min(size(X,1),size(X,2))-1
+        disp('The optimal no. of PLS will be searched by Cross-validation.');
+        NumFact = input('Enter MAX no. of PLS components: ')
+    end
     NumIter = 20000;
     Tol = 1e-5;
 elseif nargin == 5;

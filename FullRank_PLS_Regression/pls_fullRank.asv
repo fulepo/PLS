@@ -24,9 +24,6 @@ function RESULTS = pls_fullRank(X, Y, prepro, NumFact, NumIter, Tol)
 
 set(0,'DefaultFigureWindowStyle','docked');
 
-[X_rows, X_cols] = size(X);
-[Y_rows, Y_cols] = size(Y);
-
 if X_rows ~= Y_rows
     disp('ERROR! Matrix dimensions must agree')
     return

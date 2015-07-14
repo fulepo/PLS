@@ -9,7 +9,10 @@ function RESULTS_PLS = pls(X, Y, prepro, NumFact, NumIter, Tol)
 % Y = output data matrix
 % prepro = type of matrix preprocessing (0,1 and 2 are: no prepro,
 %                 column-centering and autoscaling, respectively)
-% NumFact = number of factors to extract. Give the min(X_rows, X_cols)
+% NumFact = number of factors to extract. Use this parameter to help
+%             the function in finding the optimal minimum for the 
+%             Cross-Validation and therefore, the optimal number of 
+%             PLS components necessary to build the model.
 % NumIter = maximum number of iterations for the PLS convergence
 % Tol = tolerance (given as 1e-n) for PLS convergence
 % 
@@ -26,6 +29,8 @@ function RESULTS_PLS = pls(X, Y, prepro, NumFact, NumIter, Tol)
 % 
 % The optimal number of PLS components is then used to build the final PLS
 % model.
+% The terminal output of the function gives the number of cross-validation
+% iterations, the Min_RMSEP and the optimal number of PLS components.
 %%
 
 set(0,'DefaultFigureWindowStyle','docked');
@@ -48,15 +53,28 @@ if ExistTable_A == 1 && ExistTable_B ==1
         Y_TABLE = Y(Table_permuted_Index,:);
         X = X(Table_permuted_Index,:);
         Y = Y(Table_permuted_Index,:);
+elseif ExistTable_A == 0 && ExistTable_B ==1
+    [X, Y] = pls_Convert2Table(X,Y);
+    Table_permuted_Index = randperm(size(X,1))';
+    
+        X_TABLE = X(Table_permuted_Index,:);
+        Y_TABLE = Y(Table_permuted_Index,:);
+        X = X(Table_permuted_Index,:);
+        Y = Y(Table_permuted_Index,:);
 else
-    disp('ERROR! The data are not in TABLE form');
-    RESULTS = [];
-    return
+    disp('Submit both X and Y as either MATRICES or TABLE variables');
 end
-    % PREPROCESSING WHOLE TABLES
+
+RESULTS_PLS.X_TABLE_Perm = X_TABLE;
+RESULTS_PLS.Y_TABLE_Perm = Y_TABLE;
+
+% PREPROCESSING WHOLE TABLES
         
-    [X, Y, LargeX] = pls_prepro(X, Y, prepro, X_TABLE, Y_TABLE);
-        
+    [X, Y] = pls_prepro(X, Y, prepro, X_TABLE, Y_TABLE);
+
+    RESULTS_PLS.X_TABLE_PermPrepro = X;
+    RESULTS_PLS.Y_TABLE_PermPrepro = Y;
+    
     X_TABLE_Train_old = X;
     Y_TABLE_Train_old = Y;
     X_TABLE_CrossVal_old = X;
@@ -75,7 +93,8 @@ end
     
 CrossValIndex = 1;
 while (~finish);  
-
+clc;
+iteration
     RowIndex(CrossValIndex,1) = 0;
     
     X_TABLE_Train = X_TABLE_Train_old;
@@ -116,7 +135,7 @@ while (~finish);
  for PLS_Comp = 1:NumFact 
      RESULTS_PLS.PLS_CrossVal = pls_regress(X, Y, ...
                        X_Train, Y_Train,...
-                       PLS_Comp, NumIter, Tol, prepro, NumFact, LargeX);
+                       PLS_Comp, NumIter, Tol, prepro, NumFact);
 
     Y_CrossVal_Hat = X_CrossVal*RESULTS_PLS.PLS_CrossVal.PLS_RegressCoeff;
     ressq = (Y_CrossVal-Y_CrossVal_Hat).^2;
@@ -139,7 +158,22 @@ iteration = iteration-1;
 
 CV_ERROR_tot = CV_ERROR_tot./iteration;
 RESULTS_PLS.PLS_CrossVal.CV_ERROR_tot = CV_ERROR_tot;
-[Min_RMSEP, PLS_NumComp] = min(CV_ERROR_tot(:,2));
+%[Min_RMSEP, PLS_NumComp] = min(CV_ERROR_tot(:,2));
+
+% PLS_NumComp = 0;
+% for i=1:size(CV_ERROR_tot,1)-1
+%    if (CV_ERROR_tot(i+1,2)>CV_ERROR_tot(i,2))
+%        i = i-1;
+%        Min_RMSEP = CV_ERROR_tot(i,2);
+%        PLS_NumComp = CV_ERROR_tot(i,1);
+%        i=i+1;
+%    elseif (CV_ERROR_tot(i+1,2)<CV_ERROR_tot(i,2))
+%        Min_RMSEP = CV_ERROR_tot(i+1,2);
+%        PLS_NumComp = CV_ERROR_tot(i+1,1);
+%   end
+% end
+
+    [Min_RMSEP, PLS_NumComp] = min(CV_ERROR_tot(:,2));
 
  figure
  plot(CV_ERROR_tot(:,1), (CV_ERROR_tot(:,2)), 'o-', ...
@@ -148,39 +182,28 @@ RESULTS_PLS.PLS_CrossVal.CV_ERROR_tot = CV_ERROR_tot;
  xlabel('PLS component');
  ylabel('RMSEP');
  hold on
- plot(CV_ERROR_tot(:,1), (CV_ERROR_tot(:,2)), 'o-', ...
-     'MarkerFaceColor', 'blue');
+ plot(PLS_NumComp,Min_RMSEP, 'o-', 'MarkerFaceColor', 'red');
 
-
-
- 
 %%
 %       BUILDING FINAL PLS MODEL
 
 X_Train = X;
 Y_Train = Y;
 NumFact = PLS_NumComp;
-% In questo caso metto X_Train = X, Y_Train = Y e NumFact = PLS_NumComp
-% per trarre in inganno la funzione e farle costruire il modello con 
-% il numero di componenti giuste
 
 RESULTS_PLS.PLS_Model = pls_regress(X, Y, ...
                        X_Train, Y_Train,...
-                       PLS_NumComp, NumIter, Tol, prepro, NumFact, LargeX);
+                       PLS_NumComp, NumIter, Tol, prepro, NumFact);
     
 RESULTS_PLS.PLS_Model.OUTCOME = table(iteration, Min_RMSEP, PLS_NumComp, ...
         'RowNames', {'PARAMETERS'}, ...
         'VariableNames', {'NumIter', 'Min_RMSEP', 'PLS_CompNum'});
-RESULTS_PLS.PLS_Model.OUTCOME
-%  Y
-% % 
-% (X)*RESULTS_PLS.PLS_Model.PLS_RegressCoeff
-% RESULTS_PLS.PLS_Model.PLS_RegressCoeff 
+
+    RESULTS_PLS.PLS_Model.OUTCOME
 
  pls_figures(RESULTS_PLS.PLS_Model, PLS_NumComp,X_TABLE, Y_TABLE,...
      Table_permuted_Index);
  
-
 
 
 
