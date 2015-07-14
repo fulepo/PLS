@@ -1,7 +1,7 @@
 
 function RESULTS = pls_regress(X, Y, ...
                        X_Train, Y_Train,...
-                       PLS_Comp, NumIter, Tol, prepro, NumFact)
+                       PLS_Comp, NumIter, Tol, prepro, NumFact, LargeX)
 
 X_Train_Original = X_Train;
 Y_Train_Original = Y_Train;
@@ -40,7 +40,6 @@ RESULTS.PLS_RegressCoeff = zeros(size(X_Train,1), size(Y_Train,2));
 % Decomposition 
 for fact=1:PLS_Comp
     u_h = (Y_Train(:,1));
-    u_h = normc(u_h);
     ende = false;
     
     while(~ende);
@@ -50,16 +49,16 @@ for fact=1:PLS_Comp
         w_h = normc(w_h);
         t_h =       (X_Train*w_h);
         q_h = (Y_Train'*t_h/(t_h'*t_h));
-        u_h =       (Y_Train*q_h/(q_h'*q_h)); 
+        u_h =       normc(Y_Train*q_h/(q_h'*q_h)); 
         delta_u = u_h-u_h_old;
         prec = (delta_u'*delta_u);
             if prec <= Tol;
-                ende = true;
-            elseif NumIter <= Iter
-                ende = true;
-                 disp('Iterarion stops without convergence!')
-            end
-     end
+            ende = true;
+        elseif NumIter <= Iter
+          ende = true;
+          disp('Iterarion stops without convergence!')
+        end
+    end
     
     p_h = (X_Train'*t_h/(t_h'*t_h));
     X_Train = X_Train - t_h*p_h';
@@ -83,5 +82,6 @@ RESULTS.PLS_RegressCoeff = (RESULTS.PLS_Weights'*pinv(...
      RESULTS.Y_ResidualMatrix = Y_Train;
 
     RESULTS.Y_PREDICTED = X*RESULTS.PLS_RegressCoeff;
+%[Y- RESULTS.Y_PREDICTED];
 
     

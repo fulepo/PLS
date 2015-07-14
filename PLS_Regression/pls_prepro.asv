@@ -1,7 +1,9 @@
 function [X_prepro, Y_prepro] = pls_prepro(X, Y, prepro,...
                                             X_TABLE, Y_TABLE)
 
-       if prepro == 0
+
+LargeX = b;                                        
+        if prepro == 0
             X_prepro = X;
             Y_prepro = Y;
         elseif prepro == 1

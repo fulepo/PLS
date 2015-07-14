@@ -14,7 +14,7 @@ function RESULTS_PLS = pls(X, Y, prepro, NumFact, NumIter, Tol)
 % Tol = tolerance (given as 1e-n) for PLS convergence
 % 
 % This function performs pls regression of X data on Y.
-% The algorithm performs CrossValidation using 10% of all X rows.
+% The algorithm performs CrossValidation using leave-one-out method.
 % The cross-validation is repeated until all the X rows have been 
 % used at least once.
 % For each cross-validation iteration the value of RMSEP for each 
@@ -26,6 +26,8 @@ function RESULTS_PLS = pls(X, Y, prepro, NumFact, NumIter, Tol)
 % 
 % The optimal number of PLS components is then used to build the final PLS
 % model.
+% The terminal output of the function gives the number of cross-validation
+% iterations, the Min_RMSEP and the optimal number of PLS components.
 %%
 
 set(0,'DefaultFigureWindowStyle','docked');
@@ -55,15 +57,14 @@ else
 end
     % PREPROCESSING WHOLE TABLES
         
-    [X, Y, LargeX] = pls_prepro(X, Y, prepro, X_TABLE, Y_TABLE);                    
-    
+    [X, Y] = pls_prepro(X, Y, prepro, X_TABLE, Y_TABLE);
+        
     X_TABLE_Train_old = X;
     Y_TABLE_Train_old = Y;
     X_TABLE_CrossVal_old = X;
     Y_TABLE_CrossVal_old = Y;
     X = table2array(X);
     Y = table2array(Y);
-
 
     RowIndex = [1:1:size(X,1)]';       
     CV_ERROR_tot = zeros(NumFact, 2);
@@ -73,11 +74,10 @@ end
    
     finish = false;
     iteration = 1;
-
-while (~finish);  
     
-    CrossValNum = round(0.20*size(X,1));
-    CrossValIndex = randperm(size(X,1),CrossValNum)';
+CrossValIndex = 1;
+while (~finish);  
+
     RowIndex(CrossValIndex,1) = 0;
     
     X_TABLE_Train = X_TABLE_Train_old;
@@ -87,11 +87,11 @@ while (~finish);
     Y_TABLE_CrossVal = Y_TABLE_CrossVal_old;
 
     
-    X_TABLE_CrossVal = X_TABLE_CrossVal(CrossValIndex,:);                                  
-    Y_TABLE_CrossVal = Y_TABLE_CrossVal_old(CrossValIndex,:);                                
+    X_TABLE_CrossVal = X_TABLE_CrossVal(CrossValIndex,:);                                 
+    Y_TABLE_CrossVal = Y_TABLE_CrossVal(CrossValIndex,:);                               
     
-    X_TABLE_Train(CrossValIndex,:) = [];                                    
-    Y_TABLE_Train(CrossValIndex,:) = [];                                    
+    X_TABLE_Train(CrossValIndex,:) = [];                                  
+    Y_TABLE_Train(CrossValIndex,:) = [];                                  
 
     X_Train = table2array(X_TABLE_Train);                                   
     Y_Train = table2array(Y_TABLE_Train); 
@@ -115,60 +115,63 @@ while (~finish);
 %   EXECUTION for the determination of PLS components
 
  CV_ERROR = zeros(NumFact, 2);
-
  for PLS_Comp = 1:NumFact 
- RESULTS_PLS.PLS_CrossVal = pls_regress(X, Y, ...
+     RESULTS_PLS.PLS_CrossVal = pls_regress(X, Y, ...
                        X_Train, Y_Train,...
-                       PLS_Comp, NumIter, Tol, prepro, NumFact, LargeX);
-    
+                       PLS_Comp, NumIter, Tol, prepro, NumFact);
+
     Y_CrossVal_Hat = X_CrossVal*RESULTS_PLS.PLS_CrossVal.PLS_RegressCoeff;
     ressq = (Y_CrossVal-Y_CrossVal_Hat).^2;
     RMSPE_cv = sqrt(sum(ressq(:))/Y_CrossVal_rows);
     CV_ERROR(PLS_Comp,:) = [PLS_Comp, RMSPE_cv];
-    PLS_Comp = PLS_Comp+1;
  end     
- 
+
  CV_ERROR_tot =  (CV_ERROR_tot + CV_ERROR);
  
- 
+
     if EndCrossVal == 0
         finish = true;
     end
     
 iteration = iteration+1;
+CrossValIndex = CrossValIndex+1;
 end % while cycle for CrossVal
- 
+
 iteration = iteration-1;
 
 CV_ERROR_tot = CV_ERROR_tot./iteration;
 RESULTS_PLS.PLS_CrossVal.CV_ERROR_tot = CV_ERROR_tot;
+[Min_RMSEP, PLS_NumComp] = min(CV_ERROR_tot(:,2));
+
  figure
- plot(CV_ERROR_tot(:,1), CV_ERROR_tot(:,2), 'o-', ...
+ plot(CV_ERROR_tot(:,1), (CV_ERROR_tot(:,2)), 'o-', ...
      'MarkerFaceColor', 'blue');
  title('Prediction Error - Average over all CrossVal iter.');
  xlabel('PLS component');
  ylabel('RMSEP');
-
-[Min_RMSEP, PLS_NumComp] = min(CV_ERROR_tot(:,2));
+ hold on
+ plot(PLS_NumComp,Min_RMSEP, 'o-', 'MarkerFaceColor', 'red');
 
 %%
 %       BUILDING FINAL PLS MODEL
 
 X_Train = X;
 Y_Train = Y;
+NumFact = PLS_NumComp;
 
 RESULTS_PLS.PLS_Model = pls_regress(X, Y, ...
                        X_Train, Y_Train,...
-                       PLS_NumComp, NumIter, Tol, prepro, NumFact, LargeX);
+                       PLS_NumComp, NumIter, Tol, prepro, NumFact);
     
 RESULTS_PLS.PLS_Model.OUTCOME = table(iteration, Min_RMSEP, PLS_NumComp, ...
         'RowNames', {'PARAMETERS'}, ...
         'VariableNames', {'NumIter', 'Min_RMSEP', 'PLS_CompNum'});
+RESULTS_PLS.PLS_Model.OUTCOME
 
  pls_figures(RESULTS_PLS.PLS_Model, PLS_NumComp,X_TABLE, Y_TABLE,...
      Table_permuted_Index);
  
-  RESULTS_PLS.PLS_Model.OUTCOME  
+
 
 
 

@@ -1,6 +1,8 @@
 function RESULTS = pls_FRregress(X, Y, X_rows, X_cols, ...
         Y_rows, Y_cols, NumFact, NumIter, Tol, prepro, LargeX)
 
+    Y_Original = Y;
+    X_Original = X;
 if prepro == 1
     RESULTS.X_Centered = X;
     RESULTS.Y_Centered = Y;
@@ -31,7 +33,7 @@ Iter = 0;
 
 % Decomposition 
 for fact=1:NumFact
-    u_h = normc(X(:,LargeX));
+    u_h = normc(Y(:,1));
     ende = false;
     
     while(~ende);
@@ -39,12 +41,12 @@ for fact=1:NumFact
         u_h_old = u_h;
         w_h = (X'*u_h/(u_h'*u_h));
         w_h = normc(w_h);
-        t_h = (X*w_h);
-        q_h = normc(Y'*t_h/(t_h'*t_h));
-        u_h = (Y*q_h/(q_h'*q_h));  
+        t_h = normc(X*w_h);
+        q_h = (Y'*t_h/(t_h'*t_h));
+        u_h = normc(Y*q_h/(q_h'*q_h));  
         prec = (u_h-u_h_old)'*(u_h-u_h_old);
   
-        if prec <= Tol^2;
+        if prec <= Tol;
            ende = true;
         elseif NumIter <= Iter
           ende = true;
@@ -60,15 +62,16 @@ for fact=1:NumFact
     RESULTS.Y_Scores(:,fact) = u_h;
     RESULTS.X_Loadings(fact,:) = p_h';
     RESULTS.Y_Loadings(fact,:) = q_h';  
-    RESULTS.PLS_Weights(fact,:) = w_h;
+    RESULTS.PLS_Weights(fact,:) = w_h';
  
         
 end
 
+RESULTS.PLS_RegressCoeff = (RESULTS.PLS_Weights'*inv(...
+                       RESULTS.X_Loadings*RESULTS.PLS_Weights'))*...
+                       RESULTS.Y_Loadings;
 
-% RESULTS.PLS_RegressCoeff = transpose(RESULTS.PLS_Weights*inv(...
-%     RESULTS.X_Loadings'*RESULTS.PLS_Weights))*...
-%     RESULTS.Y_Loadings;
+Y_Original-X_Original*RESULTS.PLS_RegressCoeff;
 
     RESULTS.X_Loadings = RESULTS.X_Loadings';
     RESULTS.Y_Loadings = RESULTS.Y_Loadings';

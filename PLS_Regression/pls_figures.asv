@@ -42,8 +42,7 @@ text(scaledata(RESULTS.X_Scores(:,1),-1,1)+0.02,...
     scaledata(RESULTS.X_Scores(:,2),-1,1)+0.02, ...
     X_TABLE.Properties.RowNames,...
     'HorizontalAlignment','left')
-axis([-1.2,1.2,-1.2,1.2]);
-title('Scores on PLS-1 and PLS-2 - Scaled in [-1,1]');
+title('Scores of the first two PLS components - Scaled in [-1,1]');
 xlabel('PLS-1');
 ylabel('PLS-2');
 
@@ -66,7 +65,7 @@ text(scaledata(RESULTS.Y_Loadings(:,1),-1,1)+0.02,...
     Y_TABLE.Properties.VariableNames,...
     'HorizontalAlignment','left')
 
-title('BIPLOT of PLS-1 and PLS-2  - Scaled in [-1,1]');
+title('BIPLOT of the first two PLS components');
 xlabel('PLS-1');
 ylabel('PLS-2');
 axis([-1.2,1.2,-1.2,1.2]);
